@@ -90,11 +90,11 @@ com.smartplatform
 - [ ] Notifiche persistenti e real-time
 
 ### 🔹 Fase 5 - Ottimizzazione & Cache
-- [ ] Integrazione Redis per caching eventi
-- [ ] Eviction cache su modifica
+- [x] Integrazione Redis per caching eventi
+- [x] Eviction cache su modifica
 
 ### 🔹 Fase 6 - Task Scheduler & Metrics
-- [ ] Cleanup eventi scaduti
+- [x] Cleanup eventi scaduti
 - [ ] Promemoria automatici
 - [ ] Integrazione Spring Boot Actuator
 
@@ -160,10 +160,5 @@ docker-compose up -d
 - [ ] Versionamento API (`/api/v1`)
 
 ---
-
-## 👨‍💻 Autore
-
-Gabbo Junior – Java backend developer  
-Contatti, GitHub e contributi nel file `CONTRIBUTORS.md` ✨
 
 ---
