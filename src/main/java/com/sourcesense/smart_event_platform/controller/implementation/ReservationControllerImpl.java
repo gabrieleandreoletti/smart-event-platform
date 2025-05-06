@@ -1,0 +1,55 @@
+package com.sourcesense.smart_event_platform.controller.implementation;
+
+
+import com.sourcesense.smart_event_platform.controller.definition.ReservationController;
+import com.sourcesense.smart_event_platform.model.dto.ReservationDto;
+import com.sourcesense.smart_event_platform.model.dto.request.InsertReservationRequest;
+import com.sourcesense.smart_event_platform.service.definition.ReservationService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/v1/reservations")
+public class ReservationControllerImpl implements ReservationController {
+
+    private final ReservationService reservationService;
+
+    @Override
+    @PostMapping
+    public ReservationDto insert(@RequestBody @Valid InsertReservationRequest insertReservationRequest, UsernamePasswordAuthenticationToken upat) {
+        return reservationService.insert(insertReservationRequest, upat);
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public Boolean delete(@PathVariable String id) {
+        return reservationService.delete(id);
+    }
+
+    @Override
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','ORGANIZER')")
+    public List<ReservationDto> findAll() {
+        return reservationService.findAll();
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ORGANIZER')")
+    public ReservationDto findById(@PathVariable String id) {
+        return reservationService.findById(id);
+    }
+
+    @Override
+    @GetMapping("/search")
+    public List<ReservationDto> findByCustomer(@PathVariable String customerId) {
+        return reservationService.findByCustomer(customerId);
+    }
+}

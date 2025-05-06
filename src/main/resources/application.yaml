@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: smart-event-platform
+
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/smart-event-platform?authSource=admin
+      auto-index-creation: true
+
+jwt.secret: o21o5044ècc2cb9cu8329ngct372ub93jdwjkni438h2b1jbidbixnxr2no28ryc83co2bi2nrcn832n0cc2ohnq023y5cnf3o
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
