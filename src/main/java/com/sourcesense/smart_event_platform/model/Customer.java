@@ -21,7 +21,7 @@ import java.util.List;
 @Document("customers")
 @Getter
 @Setter
-@CompoundIndex(def = "{'firstName' : 1 , 'lastName' : 1}",unique = true)
+@CompoundIndex(def = "{'firstName' : 1 , 'lastName' : 1}", unique = true)
 @NoArgsConstructor
 public class Customer implements UserDetails {
     @Id
@@ -31,7 +31,8 @@ public class Customer implements UserDetails {
     private String username;
 
     private String password;
-    private String firstName, lastName;
+    private String firstName;
+    private String lastName;
 
     private Role role;
 

@@ -1,16 +1,15 @@
 package com.sourcesense.smart_event_platform.service.implementation;
 
-import com.sourcesense.smart_event_platform.listener.PromotedFromWaitlistEvent;
-import com.sourcesense.smart_event_platform.exception.EventNotFoundException;
+import com.sourcesense.smart_event_platform.exception.DuplicateWaitlistException;
 import com.sourcesense.smart_event_platform.exception.ReservationNotFoundException;
+import com.sourcesense.smart_event_platform.listener.PromotedFromWaitlistEvent;
 import com.sourcesense.smart_event_platform.mapper.ReservationMapper;
 import com.sourcesense.smart_event_platform.model.Customer;
-import com.sourcesense.smart_event_platform.model.Event;
 import com.sourcesense.smart_event_platform.model.Reservation;
 import com.sourcesense.smart_event_platform.model.dto.ReservationDto;
 import com.sourcesense.smart_event_platform.model.dto.request.InsertReservationRequest;
-import com.sourcesense.smart_event_platform.persistance.EventRepository;
 import com.sourcesense.smart_event_platform.persistance.ReservationRepository;
+import com.sourcesense.smart_event_platform.service.definition.EventService;
 import com.sourcesense.smart_event_platform.service.definition.ReservationService;
 import com.sourcesense.smart_event_platform.service.definition.WaitlistService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final EventRepository eventRepository;
+    private final EventService eventService;
     private final ReservationMapper reservationMapper;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final WaitlistService waitlistService;
@@ -40,17 +39,21 @@ public class ReservationServiceImpl implements ReservationService {
     @CachePut(value = "reservations", key = "#result.id")
     public ReservationDto insert(InsertReservationRequest insertReservationRequest, UsernamePasswordAuthenticationToken upat) {
         Customer customer = (Customer) upat.getPrincipal();
-        Event event = eventRepository.findById(insertReservationRequest.eventId()).orElseThrow(() -> new EventNotFoundException("There is no eventi with id : " + insertReservationRequest.eventId()));
+        boolean exist = reservationRepository.existsByCustomerIdAndEventId(customer.getId(), insertReservationRequest.eventId());
+        if (exist) {
+            throw new DuplicateWaitlistException("L'utente è già registrato nell'evento");
+        }
+
         Reservation reservation = reservationMapper.fromInsertRequestToModel(insertReservationRequest);
-        if (!event.isFull()) {
-            event.addReservation();
+        boolean isAvailable = eventService.addReservation(insertReservationRequest.eventId());
+        if (isAvailable) {
             reservation.setCustomerId(customer.getId());
             reservationRepository.save(reservation);
-            eventRepository.save(event);
         } else {
-            waitlistService.addToWaitList(event, customer.getId());
+            waitlistService.addToWaitList(reservation.getEventId(), customer.getId());
         }
         return reservationMapper.fromModelToDto(reservation);
+
     }
 
     @Override
@@ -58,31 +61,23 @@ public class ReservationServiceImpl implements ReservationService {
     @CacheEvict(value = "reservations", key = "reservationId")
     public Boolean delete(String reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ReservationNotFoundException("There is no reservation with id " + reservationId));
-        Event event = eventRepository.findById(reservation.getEventId()).orElseThrow(() -> new EventNotFoundException("There is no event with id " + reservation.getEventId()));
-        event.removeReservation();
+        String eventId = reservation.getEventId();
+        eventService.removeReservation(eventId);
         reservationRepository.delete(reservation);
-
-        if (!event.getWaitList().isEmpty()) {
-            String nextCustomerId = waitlistService.handlePromotion(event);
-            applicationEventPublisher.publishEvent(new PromotedFromWaitlistEvent(nextCustomerId, event.getId()));
-        }
-        eventRepository.save(event);
+        String nextCustomerId = waitlistService.handlePromotion(eventId);
+        applicationEventPublisher.publishEvent(new PromotedFromWaitlistEvent(nextCustomerId, eventId));
         return !reservationRepository.existsById(reservationId);
     }
 
     @Override
     @CachePut(value = "reservations", key = "#result.id")
-    public ReservationDto insertFromWaitlist(String eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("event with id " + eventId + " not found"));
-        String customerId = waitlistService.handlePromotion(event);
+    public void insertFromWaitlist(String eventId) {
+        String customerId = waitlistService.handlePromotion(eventId);
 
         Reservation reservation = new Reservation(eventId, customerId);
         reservationRepository.save(reservation);
 
-        event.addReservation();
-        eventRepository.save(event);
-
-        return reservationMapper.fromModelToDto(reservation);
+        eventService.addReservation(eventId);
     }
 
     @Override
@@ -100,9 +95,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @Cacheable(value = "reservations", key = "#customerId")
-    public List<ReservationDto> findByCustomer(String customerId) {
-        List<Reservation> reservations = reservationRepository.findByCustomerId(customerId);
+    public List<ReservationDto> findByCustomer(UsernamePasswordAuthenticationToken upat) {
+        Customer customer = (Customer) upat.getPrincipal();
+        List<Reservation> reservations = reservationRepository.findByCustomerId(customer.getId());
         return reservationMapper.fromListOfModelToDto(reservations);
     }
 }

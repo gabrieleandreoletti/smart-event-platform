@@ -20,7 +20,6 @@ public class EventCleanerServiceImpl implements EventCleanerService {
     @Override
     public void cleanUpExpiredEvents() {
         List<Event> expiredEvents = eventRepository.findByDateTimeBefore(LocalDateTime.now());
-
         if (!expiredEvents.isEmpty()) {
             eventRepository.deleteAll(expiredEvents);
             log.info("Deleted expired events");

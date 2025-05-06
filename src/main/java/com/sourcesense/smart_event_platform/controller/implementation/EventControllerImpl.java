@@ -1,6 +1,5 @@
 package com.sourcesense.smart_event_platform.controller.implementation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sourcesense.smart_event_platform.controller.definition.EventController;
 import com.sourcesense.smart_event_platform.model.dto.EventDto;
 import com.sourcesense.smart_event_platform.model.dto.request.InsertEventRequest;

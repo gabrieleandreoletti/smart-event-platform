@@ -20,7 +20,8 @@ public class Event {
     @Id
     private String id;
 
-    private String name, description;
+    private String name;
+    private String description;
     private Integer maxCapacity;
     private Integer actualCapacity = 0;
 
@@ -30,7 +31,7 @@ public class Event {
 
     private List<String> waitList = new ArrayList<>();
 
-    private Boolean isPrivate;
+    private boolean isPrivate;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
@@ -38,25 +39,13 @@ public class Event {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Event(String id, String name, String description,  Integer maxCapacity, LocalDateTime dateTime, Boolean isPrivate) {
+    public Event(String id, String name, String description, Integer maxCapacity, LocalDateTime dateTime, Boolean isPrivate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.dateTime = dateTime;
         this.maxCapacity = maxCapacity;
         this.isPrivate = isPrivate;
-    }
-
-    public void addReservation() {
-        this.actualCapacity = actualCapacity + 1;
-    }
-
-    public void removeReservation() {
-        this.actualCapacity = actualCapacity - 1;
-    }
-
-    public Boolean isFull() {
-        return actualCapacity.equals(maxCapacity);
     }
 
 }

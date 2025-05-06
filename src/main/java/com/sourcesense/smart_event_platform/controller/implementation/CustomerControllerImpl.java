@@ -35,13 +35,13 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     @GetMapping("/{customerId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public CustomerDto findByID(@RequestParam String customerId) {
+    public CustomerDto findByID(@PathVariable String customerId) {
         return service.findByID(customerId);
     }
 
     @Override
-    @GetMapping("/{username}")
-    public CustomerDto findByUsername(@RequestParam String username) {
+    @GetMapping("/username/{username}")
+    public CustomerDto findByUsername(@PathVariable String username) {
         return service.findByUsername(username);
     }
 

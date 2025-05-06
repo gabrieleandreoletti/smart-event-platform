@@ -28,7 +28,7 @@ public class ReservationControllerImpl implements ReservationController {
 
     @Override
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public Boolean delete(@PathVariable String id) {
         return reservationService.delete(id);
     }
@@ -48,8 +48,9 @@ public class ReservationControllerImpl implements ReservationController {
     }
 
     @Override
-    @GetMapping("/search")
-    public List<ReservationDto> findByCustomer(@PathVariable String customerId) {
-        return reservationService.findByCustomer(customerId);
+    @GetMapping("/personal")
+    @PreAuthorize("hasRole('USER')")
+    public List<ReservationDto> findByCustomer(UsernamePasswordAuthenticationToken upat) {
+        return reservationService.findByCustomer(upat);
     }
 }

@@ -30,10 +30,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public CustomerDto registration(InsertCustomerRequest insertRequest) {
         Customer customer = customerMapper.fromInsertRequestToModel(insertRequest);
         cryptPassword(customer);
-        if (insertRequest.role() != null) {
-            customer.setRole(insertRequest.role());
-        } else {
+        if (insertRequest.role() == null) {
             customer.setRole(Role.USER);
+        } else {
+            customer.setRole(insertRequest.role());
         }
         customerRepository.save(customer);
         return customerMapper.fromModelToDto(customer);

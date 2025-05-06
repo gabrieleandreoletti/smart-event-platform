@@ -5,8 +5,10 @@ public enum Role {
     USER("user"), ORGANIZER("organizer"), ADMIN("admin");
 
 
-    private String name;
+    private final String name;
 
     Role(String name) {
+        this.name = name;
     }
+
 }

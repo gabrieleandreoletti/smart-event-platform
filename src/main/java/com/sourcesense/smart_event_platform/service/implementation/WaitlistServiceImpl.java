@@ -1,6 +1,7 @@
 package com.sourcesense.smart_event_platform.service.implementation;
 
 import com.sourcesense.smart_event_platform.exception.DuplicateWaitlistException;
+import com.sourcesense.smart_event_platform.exception.EventNotFoundException;
 import com.sourcesense.smart_event_platform.model.Event;
 import com.sourcesense.smart_event_platform.persistance.EventRepository;
 import com.sourcesense.smart_event_platform.service.definition.WaitlistService;
@@ -16,24 +17,24 @@ public class WaitlistServiceImpl implements WaitlistService {
     private final EventRepository eventRepository;
 
     @Override
-    public void addToWaitList(Event event, String customerId) {
+    public void addToWaitList(String eventId, String customerId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("This event is not found"));
         if (!event.getWaitList().contains(customerId)) {
             event.getWaitList().add(customerId);
             eventRepository.save(event);
-            log.info("{} aggiunto alla waitlist dell'evento {}", customerId, event.getId());
         } else {
             throw new DuplicateWaitlistException("this user is already in waitlist");
         }
     }
 
     @Override
-    public String handlePromotion(Event event) {
+    public String handlePromotion(String eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("This event is not found"));
         if (event.getWaitList().isEmpty()) {
             return null;
         }
         String nextCustomer = event.getWaitList().removeFirst();
         eventRepository.save(event);
-        log.info("{} ha ottenuto il posto per l'evento {}", nextCustomer, event.getId());
         return nextCustomer;
     }
 }

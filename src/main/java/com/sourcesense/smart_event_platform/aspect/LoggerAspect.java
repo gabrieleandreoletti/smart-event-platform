@@ -17,6 +17,16 @@ public class LoggerAspect {
     public void controllerMethods() {
     }
 
+    @Pointcut("execution(* com.sourcesense.smart_event_platform.service.implementation.EventCleanerServiceImpl.*(..))")
+    public void cleaner() {
+    }
+
+    @After(value = "cleaner()")
+    public void logAfterClean(JoinPoint joinPoint) {
+        log.info("Calling method : {} , Removing expired events", joinPoint.getSignature());
+    }
+
+
     @Before(value = "controllerMethods()")
     public void logBefore(JoinPoint joinPoint) {
         log.info("Calling method : {} | Args: {}", joinPoint.getSignature(), Arrays.toString(joinPoint.getArgs()));

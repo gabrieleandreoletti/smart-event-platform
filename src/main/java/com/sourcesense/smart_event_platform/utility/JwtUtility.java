@@ -22,7 +22,7 @@ public class JwtUtility {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private final static long EXPIRATION = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());

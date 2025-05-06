@@ -15,7 +15,7 @@ public interface ReservationController {
 
     ReservationDto findById(String reservationId);
 
-    List<ReservationDto> findByCustomer(String customerId);
+    List<ReservationDto> findByCustomer(UsernamePasswordAuthenticationToken upat);
 
 
 }

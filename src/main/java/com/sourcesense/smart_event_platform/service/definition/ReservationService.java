@@ -12,12 +12,12 @@ public interface ReservationService {
 
     Boolean delete(String reservationID);
 
-    ReservationDto insertFromWaitlist(String eventId);
+    void insertFromWaitlist(String eventId);
 
     List<ReservationDto> findAll();
 
     ReservationDto findById(String reservationId);
 
-    List<ReservationDto> findByCustomer(String customerId);
+    List<ReservationDto> findByCustomer(UsernamePasswordAuthenticationToken upat);
 
 }

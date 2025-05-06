@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @CacheEvict(value = "customers", key = "#customerId")
@@ -50,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (updateRequest.password() != null) {
-            customer.setPassword(updateRequest.password());
+            customer.setPassword(passwordEncoder.encode(updateRequest.password()));
         }
 
         customerRepository.save(customer);

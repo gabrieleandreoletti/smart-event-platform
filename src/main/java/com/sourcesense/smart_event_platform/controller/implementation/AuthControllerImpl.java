@@ -24,7 +24,7 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PostMapping
-    @Operation(summary = "registrazione utente", description = "il client passa il corpo nella richiesta e viene registrato nel database")
+    @Operation(summary = "user registration", description = "The client passes the body in the request and is recorded in the database")
     public CustomerDto registration(@RequestBody @Valid InsertCustomerRequest insertRequest) {
         return authenticationService.registration(insertRequest);
     }

@@ -10,4 +10,8 @@ import java.util.List;
 public interface ReservationRepository extends MongoRepository<Reservation, String> {
 
     List<Reservation> findByCustomerId(String id);
+
+    List<Reservation> findByEventId(String id);
+
+    Boolean existsByCustomerIdAndEventId(String customerId, String eventId);
 }
