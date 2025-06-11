@@ -17,4 +17,6 @@ public interface ReservationMapper {
     ReservationDto fromModelToDto(Reservation reservation);
 
     List<ReservationDto> fromListOfModelToDto(List<Reservation> reservations);
+
+
 }

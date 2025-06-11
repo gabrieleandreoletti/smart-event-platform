@@ -1,9 +1,7 @@
 package com.sourcesense.smart_event_platform.model;
 
-import com.sourcesense.smart_event_platform.security.Role;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.sourcesense.smart_event_platform.configuration.Role;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +21,8 @@ import java.util.List;
 @Setter
 @CompoundIndex(def = "{'firstName' : 1 , 'lastName' : 1}", unique = true)
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Customer implements UserDetails {
     @Id
     private String id;

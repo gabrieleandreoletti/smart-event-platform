@@ -14,4 +14,8 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
     List<Reservation> findByEventId(String id);
 
     Boolean existsByCustomerIdAndEventId(String customerId, String eventId);
+
+    void deleteByEventId(String eventId);
+
+    void deleteByCustomerId(String customerId);
 }

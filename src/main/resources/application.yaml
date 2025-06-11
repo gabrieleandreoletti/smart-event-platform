@@ -2,6 +2,8 @@ spring:
   application:
     name: smart-event-platform
 
+server:
+  port: 8083
   data:
     mongodb:
       uri: mongodb://admin:password@localhost:27017/smart-event-platform?authSource=admin

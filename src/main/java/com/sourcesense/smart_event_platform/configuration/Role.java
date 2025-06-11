@@ -1,4 +1,4 @@
-package com.sourcesense.smart_event_platform.security;
+package com.sourcesense.smart_event_platform.configuration;
 
 public enum Role {
 

@@ -1,4 +1,4 @@
-package com.sourcesense.smart_event_platform.security;
+package com.sourcesense.smart_event_platform.configuration;
 
 import com.sourcesense.smart_event_platform.utility.JwtUtility;
 import jakarta.servlet.FilterChain;

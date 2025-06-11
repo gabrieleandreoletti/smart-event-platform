@@ -10,11 +10,24 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
 
 @RestControllerAdvice
 public class ErrorHandler {
+
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ProblemDetail> handleNoResourceFoundException(NoResourceFoundException e) {
+        return handleException(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ProblemDetail> handleNullPointerException(NullPointerException e) {
+        return handleException(e, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler({
             EventNotFoundException.class,
@@ -30,14 +43,10 @@ public class ErrorHandler {
             DuplicateKeyException.class,
             MongoWriteException.class
     })
-    public ResponseEntity<ProblemDetail> handleException(Exception e) {
+    public ResponseEntity<ProblemDetail> handleNoResourceFoundException(Exception e) {
         return handleException(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ProblemDetail> handleNullPointerException(NullPointerException e) {
-        return handleException(e, HttpStatus.NO_CONTENT);
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGenericException(Exception e) {
@@ -46,9 +55,11 @@ public class ErrorHandler {
 
     private ResponseEntity<ProblemDetail> handleException(Throwable throwable, HttpStatus status) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setStatus(status);
         problemDetail.setType(URI.create("http://api.sourcense/error/" + status.name()));
         problemDetail.setDetail(throwable.getMessage());
         problemDetail.setProperty("cause", throwable.getClass());
-        return ResponseEntity.badRequest().body(problemDetail);
+        return new ResponseEntity<>(problemDetail, status);
+
     }
 }

@@ -7,11 +7,11 @@ import com.sourcesense.smart_event_platform.model.dto.CustomerDto;
 import com.sourcesense.smart_event_platform.model.dto.request.InsertCustomerRequest;
 import com.sourcesense.smart_event_platform.model.dto.request.LoginCustomerRequest;
 import com.sourcesense.smart_event_platform.persistance.CustomerRepository;
-import com.sourcesense.smart_event_platform.security.Role;
+import com.sourcesense.smart_event_platform.configuration.Role;
 import com.sourcesense.smart_event_platform.service.definition.AuthenticationService;
 import com.sourcesense.smart_event_platform.utility.JwtUtility;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +26,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomerMapper customerMapper;
 
     @Override
-    @CachePut(value = "customers", key = "#result.id")
+    @CacheEvict(value = "customers", allEntries = true)
     public CustomerDto registration(InsertCustomerRequest insertRequest) {
         Customer customer = customerMapper.fromInsertRequestToModel(insertRequest);
         cryptPassword(customer);
-        if (insertRequest.role() == null) {
-            customer.setRole(Role.USER);
-        } else {
-            customer.setRole(insertRequest.role());
-        }
+        Role role = insertRequest.role() == null ? Role.USER : insertRequest.role();
+        customer.setRole(role);
         customerRepository.save(customer);
         return customerMapper.fromModelToDto(customer);
     }

@@ -20,8 +20,10 @@ public interface CustomerMapper {
     @Mapping(target = "fullName", source = ".", qualifiedByName = "combineFullName")
     List<CustomerDto> fromListOfEntityToDto(List<Customer> customerList);
 
+
     @Named("combineFullName")
     static String combineFullName(Customer customer) {
         return customer.getFirstName() + " " + customer.getLastName();
     }
+
 }

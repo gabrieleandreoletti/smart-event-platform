@@ -18,4 +18,5 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username).orElseThrow(() -> new CustomerNotFoundException("There is no customer with username " + username));
     }
+
 }

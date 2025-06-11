@@ -4,7 +4,6 @@ import com.sourcesense.smart_event_platform.model.Event;
 import com.sourcesense.smart_event_platform.model.dto.EventDto;
 import com.sourcesense.smart_event_platform.model.dto.request.InsertEventRequest;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface EventMapper {
 
     EventDto fromModelToDto(Event event);
 
-    Page<EventDto> fromPageOfModelToDto(Page<Event> events);
 
     List<EventDto> fromListOfModelToDto(List<Event> events);
+
 }

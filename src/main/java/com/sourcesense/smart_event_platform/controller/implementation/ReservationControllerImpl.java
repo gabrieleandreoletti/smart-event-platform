@@ -7,6 +7,8 @@ import com.sourcesense.smart_event_platform.model.dto.request.InsertReservationR
 import com.sourcesense.smart_event_platform.service.definition.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ public class ReservationControllerImpl implements ReservationController {
 
     @Override
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ReservationDto insert(@RequestBody @Valid InsertReservationRequest insertReservationRequest, UsernamePasswordAuthenticationToken upat) {
         return reservationService.insert(insertReservationRequest, upat);
     }
@@ -29,6 +32,7 @@ public class ReservationControllerImpl implements ReservationController {
     @Override
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Boolean delete(@PathVariable String id) {
         return reservationService.delete(id);
     }
@@ -36,8 +40,8 @@ public class ReservationControllerImpl implements ReservationController {
     @Override
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','ORGANIZER')")
-    public List<ReservationDto> findAll() {
-        return reservationService.findAll();
+    public Page<ReservationDto> findAll(@RequestParam int page, @RequestParam int size) {
+        return reservationService.findAll(page, size);
     }
 
     @Override

@@ -5,9 +5,11 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record InsertEventRequest(
         @NotBlank @Size(min = 3, max = 25) String name,
         @NotBlank @Size(min = 5, max = 80) String description,

@@ -1,6 +1,6 @@
 package com.sourcesense.smart_event_platform.model.dto.request;
 
-import com.sourcesense.smart_event_platform.security.Role;
+import com.sourcesense.smart_event_platform.configuration.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

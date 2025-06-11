@@ -1,7 +1,7 @@
 package com.sourcesense.smart_event_platform.utility;
 
 import com.sourcesense.smart_event_platform.model.Customer;
-import com.sourcesense.smart_event_platform.security.Role;
+import com.sourcesense.smart_event_platform.configuration.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

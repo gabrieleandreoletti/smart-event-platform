@@ -1,11 +1,10 @@
 package com.sourcesense.smart_event_platform.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -16,6 +15,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@CompoundIndex(def = "{'name': 1 , 'dateTime' : 1 }", unique = true)
+@Builder
+@AllArgsConstructor
+@ToString
 public class Event {
     @Id
     private String id;

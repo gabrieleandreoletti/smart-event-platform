@@ -1,4 +1,4 @@
-package com.sourcesense.smart_event_platform.listener;
+package com.sourcesense.smart_event_platform.listener.event;
 
 import lombok.Getter;
 import lombok.Setter;

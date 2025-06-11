@@ -1,4 +1,4 @@
-package com.sourcesense.smart_event_platform.security;
+package com.sourcesense.smart_event_platform.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(t ->
-                        t.requestMatchers("api/v1/auth*/**", "swagger-ui/**", "v3/api-docs").permitAll()
+                        t.requestMatchers("api/v1/auth*/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
